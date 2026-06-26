@@ -9,7 +9,7 @@ app.use(express.text());
 
 const transporter = nodemailer.createTransport(config.smtp);
 
-app.post("/collect", async (req, res) => {
+app.all("/collect", async (req, res) => {
     try {
         await transporter.sendMail({
             from: config.smtp.auth.user,
