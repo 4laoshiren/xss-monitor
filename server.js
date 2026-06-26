@@ -9,13 +9,28 @@ app.use(express.text());
 
 const transporter = nodemailer.createTransport(config.smtp);
 
-app.all("/collect", async (req, res) => {
+app.post("/collect", async (req, res) => {
     try {
         await transporter.sendMail({
             from: config.smtp.auth.user,
             to: config.notifyTo,
             subject: "XSS NOTIFICATION",
             text: req.body,
+        });
+        console.log("邮件发送成功");
+    } catch (err) {
+        console.error("邮件发送失败:", err.message);
+    }
+    res.status(200).end();
+});
+
+app.get("/collect", async (req, res) => {
+    try {
+        await transporter.sendMail({
+            from: config.smtp.auth.user,
+            to: config.notifyTo,
+            subject: "XSS NOTIFICATION",
+            text: JSON.stringify(req.query),
         });
         console.log("邮件发送成功");
     } catch (err) {
